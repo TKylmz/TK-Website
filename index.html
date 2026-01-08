@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TK | Creative Developer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Mouse-reactive floating particles -->
+    <div class="reactive-particles" id="reactiveParticles"></div>
+
+    <!-- FIXED CENTER SVG VISUAL (outside scroll container to stay fixed) -->
+    <div class="fixed-visual">
+        <svg class="main-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Gradients -->
+                <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0ea5e9"/>
+                    <stop offset="50%" stop-color="#06b6d4"/>
+                    <stop offset="100%" stop-color="#22d3ee"/>
+                </linearGradient>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f59e0b"/>
+                    <stop offset="100%" stop-color="#fbbf24"/>
+                </linearGradient>
+                <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+                    </radialGradient>
+                    
+                    <!-- Glow filter -->
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <!-- Background glow pulse -->
+                <circle class="bg-glow" cx="300" cy="300" r="250" fill="url(#glowGradient)" opacity="0"/>
+                
+                <!-- LAYER 1: Outer compass ring with tick marks -->
+                <g class="layer-outer" opacity="0">
+                    <circle cx="300" cy="300" r="270" fill="none" stroke="url(#oceanGradient)" stroke-width="2" opacity="0.3"/>
+                    <circle cx="300" cy="300" r="260" fill="none" stroke="url(#oceanGradient)" stroke-width="1" opacity="0.2"/>
+                    
+                    <!-- Major tick marks (N,S,E,W) -->
+                    <line x1="300" y1="35" x2="300" y2="55" stroke="url(#oceanGradient)" stroke-width="3"/>
+                    <line x1="300" y1="545" x2="300" y2="565" stroke="url(#oceanGradient)" stroke-width="3"/>
+                    <line x1="35" y1="300" x2="55" y2="300" stroke="url(#oceanGradient)" stroke-width="3"/>
+                    <line x1="545" y1="300" x2="565" y2="300" stroke="url(#oceanGradient)" stroke-width="3"/>
+                    
+                    <!-- Minor tick marks -->
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(30, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(60, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(120, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(150, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(210, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(240, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(300, 300, 300)"/>
+                    <line x1="300" y1="35" x2="300" y2="45" stroke="url(#oceanGradient)" stroke-width="1" transform="rotate(330, 300, 300)"/>
+                    
+                    <!-- Cardinal labels -->
+                    <text x="300" y="25" text-anchor="middle" fill="#0ea5e9" font-size="14" font-family="Space Grotesk" font-weight="600">N</text>
+                    <text x="300" y="588" text-anchor="middle" fill="#0ea5e9" font-size="14" font-family="Space Grotesk" font-weight="600">S</text>
+                    <text x="12" y="305" text-anchor="middle" fill="#0ea5e9" font-size="14" font-family="Space Grotesk" font-weight="600">W</text>
+                    <text x="588" y="305" text-anchor="middle" fill="#0ea5e9" font-size="14" font-family="Space Grotesk" font-weight="600">E</text>
+                </g>
+                
+                <!-- LAYER 2: Outer gear ring (rotates clockwise) -->
+                <g class="layer-gear-outer" style="transform-origin: 300px 300px;">
+                    <circle cx="300" cy="300" r="220" fill="none" stroke="url(#oceanGradient)" stroke-width="4"/>
+                    
+                    <!-- 16 Gear teeth -->
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)"/>
+                    <rect x="290" y="512" width="20" height="16" rx="3" fill="url(#oceanGradient)"/>
+                    <rect x="72" y="290" width="16" height="20" rx="3" fill="url(#oceanGradient)"/>
+                    <rect x="512" y="290" width="16" height="20" rx="3" fill="url(#oceanGradient)"/>
+                    
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(45, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(90, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(135, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(180, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(225, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(270, 300, 300)"/>
+                    <rect x="290" y="72" width="20" height="16" rx="3" fill="url(#oceanGradient)" transform="rotate(315, 300, 300)"/>
+                    
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(22.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(67.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(112.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(157.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(202.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(247.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(292.5, 300, 300)"/>
+                    <rect x="290" y="72" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(337.5, 300, 300)"/>
+                </g>
+                
+                <!-- LAYER 3: Inner gear ring (rotates counter-clockwise) -->
+                <g class="layer-gear-inner" style="transform-origin: 300px 300px;">
+                    <circle cx="300" cy="300" r="160" fill="none" stroke="url(#oceanGradient)" stroke-width="3"/>
+                    
+                    <!-- 12 teeth -->
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(30, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(60, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(90, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(120, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(150, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(180, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(210, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(240, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(270, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(300, 300, 300)"/>
+                    <rect x="292" y="134" width="16" height="12" rx="2" fill="url(#oceanGradient)" transform="rotate(330, 300, 300)"/>
+                </g>
+                
+                <!-- LAYER 4: Ship wheel spokes with handles -->
+                <g class="layer-spokes" style="transform-origin: 300px 300px;">
+                    <!-- Main spokes -->
+                    <line class="spoke" x1="300" y1="180" x2="300" y2="90" stroke="url(#oceanGradient)" stroke-width="8" stroke-linecap="round"/>
+                    <line class="spoke" x1="300" y1="420" x2="300" y2="510" stroke="url(#oceanGradient)" stroke-width="8" stroke-linecap="round"/>
+                    <line class="spoke" x1="180" y1="300" x2="90" y2="300" stroke="url(#oceanGradient)" stroke-width="8" stroke-linecap="round"/>
+                    <line class="spoke" x1="420" y1="300" x2="510" y2="300" stroke="url(#oceanGradient)" stroke-width="8" stroke-linecap="round"/>
+                    
+                    <!-- Diagonal spokes -->
+                    <line class="spoke" x1="215" y1="215" x2="150" y2="150" stroke="url(#oceanGradient)" stroke-width="6" stroke-linecap="round"/>
+                    <line class="spoke" x1="385" y1="385" x2="450" y2="450" stroke="url(#oceanGradient)" stroke-width="6" stroke-linecap="round"/>
+                    <line class="spoke" x1="385" y1="215" x2="450" y2="150" stroke="url(#oceanGradient)" stroke-width="6" stroke-linecap="round"/>
+                    <line class="spoke" x1="215" y1="385" x2="150" y2="450" stroke="url(#oceanGradient)" stroke-width="6" stroke-linecap="round"/>
+                    
+                    <!-- Handle knobs -->
+                    <circle class="handle" cx="300" cy="80" r="16" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="300" cy="520" r="16" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="80" cy="300" r="16" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="520" cy="300" r="16" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="144" cy="144" r="12" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="456" cy="456" r="12" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="456" cy="144" r="12" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    <circle class="handle" cx="144" cy="456" r="12" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                </g>
+                
+                <!-- LAYER 5: Circuit paths (draw on scroll) -->
+                <g class="layer-circuits" opacity="0">
+                    <path class="circuit-path" d="M300,250 L300,180 L380,180 L380,100" fill="none" stroke="#22d3ee" stroke-width="2"/>
+                    <path class="circuit-path" d="M300,350 L300,420 L220,420 L220,500" fill="none" stroke="#22d3ee" stroke-width="2"/>
+                    <path class="circuit-path" d="M250,300 L180,300 L180,220 L100,220" fill="none" stroke="#22d3ee" stroke-width="2"/>
+                    <path class="circuit-path" d="M350,300 L420,300 L420,380 L500,380" fill="none" stroke="#22d3ee" stroke-width="2"/>
+                    
+                    <!-- Additional diagonal circuits -->
+                    <path class="circuit-path" d="M265,265 L200,200 L130,200" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                    <path class="circuit-path" d="M335,335 L400,400 L470,400" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                    <path class="circuit-path" d="M335,265 L400,200 L470,200" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                    <path class="circuit-path" d="M265,335 L200,400 L130,400" fill="none" stroke="#06b6d4" stroke-width="2"/>
+                    
+                    <!-- Circuit nodes -->
+                    <circle class="circuit-node" cx="380" cy="100" r="6" fill="#22d3ee" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="220" cy="500" r="6" fill="#22d3ee" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="100" cy="220" r="6" fill="#22d3ee" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="500" cy="380" r="6" fill="#22d3ee" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="130" cy="200" r="5" fill="#06b6d4" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="470" cy="400" r="5" fill="#06b6d4" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="470" cy="200" r="5" fill="#06b6d4" filter="url(#glow)"/>
+                    <circle class="circuit-node" cx="130" cy="400" r="5" fill="#06b6d4" filter="url(#glow)"/>
+                    
+                    <!-- Pulsing data dots -->
+                    <circle class="data-dot" r="4" fill="#fff">
+                        <animateMotion dur="3s" repeatCount="indefinite" path="M300,250 L300,180 L380,180 L380,100"/>
+                    </circle>
+                    <circle class="data-dot" r="4" fill="#fff">
+                        <animateMotion dur="3.5s" repeatCount="indefinite" path="M300,350 L300,420 L220,420 L220,500"/>
+                    </circle>
+                    <circle class="data-dot" r="3" fill="#fff">
+                        <animateMotion dur="2.5s" repeatCount="indefinite" path="M250,300 L180,300 L180,220 L100,220"/>
+                    </circle>
+                </g>
+                
+                <!-- LAYER 6: Central hub -->
+                <g class="layer-hub">
+                    <circle cx="300" cy="300" r="70" fill="none" stroke="url(#oceanGradient)" stroke-width="4"/>
+                    <circle cx="300" cy="300" r="55" fill="none" stroke="url(#oceanGradient)" stroke-width="2" opacity="0.6"/>
+                    <circle cx="300" cy="300" r="40" fill="none" stroke="url(#oceanGradient)" stroke-width="1" opacity="0.4"/>
+                    <circle class="hub-center" cx="300" cy="300" r="28" fill="url(#oceanGradient)"/>
+                    
+                    <!-- Pulse rings -->
+                    <circle class="pulse-ring pulse-1" cx="300" cy="300" r="35" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0"/>
+                    <circle class="pulse-ring pulse-2" cx="300" cy="300" r="35" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0"/>
+                </g>
+                
+                <!-- LAYER 7: Compass needle -->
+                <g class="layer-compass" style="transform-origin: 300px 300px;">
+                    <polygon class="compass-north" points="300,255 312,300 300,290 288,300" fill="url(#goldGradient)" filter="url(#glow)"/>
+                    <polygon class="compass-south" points="300,345 288,300 300,310 312,300" fill="#475569"/>
+                </g>
+                
+                <!-- LAYER 8: Orbiting elements -->
+                <g class="layer-orbits">
+                    <circle class="orbit-path" cx="300" cy="300" r="190" fill="none" stroke="url(#oceanGradient)" stroke-width="1" stroke-dasharray="4,8" opacity="0.3"/>
+                    <circle class="orbit-path" cx="300" cy="300" r="240" fill="none" stroke="url(#oceanGradient)" stroke-width="1" stroke-dasharray="2,12" opacity="0.2"/>
+                    
+                    <!-- Orbiting dots -->
+                    <g class="orbit-dot-group orbit-1" style="transform-origin: 300px 300px;">
+                        <circle cx="490" cy="300" r="8" fill="url(#oceanGradient)" filter="url(#glow)"/>
+                    </g>
+                    <g class="orbit-dot-group orbit-2" style="transform-origin: 300px 300px;">
+                        <circle cx="300" cy="110" r="6" fill="#22d3ee" filter="url(#glow)"/>
+                    </g>
+                    <g class="orbit-dot-group orbit-3" style="transform-origin: 300px 300px;">
+                        <circle cx="110" cy="300" r="5" fill="#06b6d4" filter="url(#glow)"/>
+                    </g>
+                </g>
+                
+                <!-- LAYER 9: Decorative text ring -->
+                <g class="layer-text-ring" opacity="0">
+                    <path id="textPath" d="M 300,300 m -200,0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" fill="none"/>
+                    <text font-size="10" fill="#0ea5e9" font-family="JetBrains Mono" letter-spacing="8" opacity="0.5">
+                        <textPath href="#textPath">CREATIVE • DEVELOPER • DECKHAND • PROBLEM SOLVER • CURIOUS MIND • </textPath>
+                    </text>
+                </g>
+        </svg>
+            
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            <span>Scroll to explore</span>
+        </div>
+    </div>
+
+    <!-- Smooth scroll wrapper -->
+    <div class="smooth-scroll-wrapper" id="smoothWrapper">
+        <!-- MAIN SCROLL CONTAINER -->
+        <div class="scroll-container" id="scrollContainer">
+            <!-- SCROLLABLE CONTENT SECTIONS (appear on sides) -->
+            <div class="scroll-sections">
+            
+                <!-- Section 0: Hero -->
+                <section class="scroll-section section-hero" data-section="0">
+                    <div class="section-content content-center">
+                        <p class="label animate-item">Creative Developer</p>
+                        <h1 class="title-large animate-item">
+                            Navigating<br>
+                            <span class="gradient-text">Digital Waters</span>
+                        </h1>
+                        <p class="subtitle animate-item">By day, I work the deck. By night, I craft digital experiences.</p>
+                    </div>
+                </section>
+            
+                <!-- Section 1: About -->
+                <section class="scroll-section section-about" data-section="1" id="about">
+                <div class="section-content content-left">
+                    <div class="content-card animate-item">
+                        <span class="label">About Me</span>
+                        <h2>A Craftsman's<br>Approach</h2>
+                        <p>Working as a deckhand has taught me what no bootcamp could: adaptability under pressure, meticulous attention to detail, and the value of hands-on problem solving.</p>
+                    </div>
+                </div>
+                <div class="section-content content-right">
+                    <div class="content-card glass animate-item">
+                        <h3>Self-Taught</h3>
+                        <p>Perpetually curious, learning by doing.</p>
+                    </div>
+                    <div class="content-card glass animate-item">
+                        <h3>Problem Solver</h3>
+                        <p>Finding solutions in any conditions.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 2: Philosophy -->
+            <section class="scroll-section section-philosophy" data-section="2">
+                <div class="section-content content-right">
+                    <div class="content-card animate-item">
+                        <span class="label">Philosophy</span>
+                        <h2>Bridging<br>Two Worlds</h2>
+                        <p>I bring a unique perspective—combining real-world grit with digital creativity. Every wave teaches something new, and so does every line of code.</p>
+                        <p class="ai-note">AI won't take your job—someone who masters AI will. Code is evolving from labor to architecture. Generation is fast, but maintenance, oversight, and architectural decisions remain irreplaceably human.</p>
+                    </div>
+                </div>
+                <div class="section-content content-left">
+                    <div class="icon-grid">
+                        <div class="icon-item animate-item">
+                            <span class="icon">🌊</span>
+                            <span class="icon-label">Maritime</span>
+                        </div>
+                        <div class="icon-item animate-item">
+                            <span class="icon">💻</span>
+                            <span class="icon-label">Development</span>
+                        </div>
+                        <div class="icon-item animate-item">
+                            <span class="icon">🎨</span>
+                            <span class="icon-label">Design</span>
+                        </div>
+                        <div class="icon-item animate-item">
+                            <span class="icon">⚡</span>
+                            <span class="icon-label">Innovation</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 3: Skills -->
+            <section class="scroll-section section-skills" data-section="3" id="skills">
+                <div class="section-content content-left">
+                    <div class="content-card animate-item">
+                        <span class="label">Skills</span>
+                        <h2>Technical<br>Arsenal</h2>
+                    </div>
+                    <div class="skills-list animate-item">
+                        <div class="skill-row">
+                            <span class="skill-name">HTML & CSS</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="90"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="75"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-name">React</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="70"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-content content-right">
+                    <div class="skills-list animate-item">
+                        <div class="skill-row">
+                            <span class="skill-name">UI/UX Design</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="85"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-name">SVG & Animation</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="80"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-name">Prompt Engineering</span>
+                            <div class="skill-bar"><div class="skill-fill" data-level="95"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Projects -->
+            <section class="scroll-section section-projects" data-section="4" id="projects">
+                <div class="section-content content-center">
+                    <div class="content-card wide animate-item">
+                        <span class="label">Projects</span>
+                        <h2>Selected Work</h2>
+                        <div class="projects-grid">
+                            <div class="project-card animate-item">
+                                <div class="project-thumb project-ai-runner">
+                                    <img src="pics/endless_runner.png" alt="AI-Trained Endless Runner">
+                                </div>
+                                <h4>AI-Trained Endless Runner</h4>
+                                <p>Trained an AI agent using reinforcement learning (PPO) to dodge oncoming traffic on a 3-lane endless road.</p>
+                                <div class="project-tags">
+                                    <span class="tag">Unity</span>
+                                    <span class="tag">C#</span>
+                                    <span class="tag">ML-Agents</span>
+                                    <span class="tag">Reinforcement Learning</span>
+                                </div>
+                            </div>
+                            <div class="project-card animate-item">
+                                <div class="project-thumb project-toy">
+                                    <img src="pics/toy.png" alt="Toy Chat Application">
+                                </div>
+                                <h4>Toy</h4>
+                                <p>Desktop chat app with real-time messaging, voice/video calls, featuring a Turkic steppe-themed UI with an Otağ gathering hub.</p>
+                                <div class="project-tags">
+                                    <span class="tag">Electron</span>
+                                    <span class="tag">Supabase</span>
+                                    <span class="tag">LiveKit</span>
+                                </div>
+                            </div>
+                            <div class="project-card project-featured animate-item">
+                                <div class="project-thumb project-local-ai">
+                                    <img src="pics/Local AI.png" alt="Local AI Assistant">
+                                </div>
+                                <h4>Local AI Assistant</h4>
+                                <p>GPU-accelerated assistant using a fine-tuned LLaMA model with LoRA to reduce alignment bias, deployed via OpenAI-compatible API with RAG pipeline.</p>
+                                <div class="project-tags">
+                                    <span class="tag">LLaMA</span>
+                                    <span class="tag">LoRA</span>
+                                    <span class="tag">RAG</span>
+                                    <span class="tag">REST API</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 5: Contact (Final Section) -->
+            <section class="scroll-section section-contact" data-section="5" id="contact">
+                <div class="section-content content-center">
+                    <div class="content-card wide animate-item">
+                        <span class="label">Contact</span>
+                        <h2>Let's Build<br>Something</h2>
+                        <p class="contact-text">Have a project in mind? Let's talk.</p>
+                        <div class="contact-buttons">
+                            <a href="mailto:your.email@example.com" class="btn btn-primary">Email Me</a>
+                            <a href="https://github.com/yourusername" class="btn btn-secondary">GitHub</a>
+                            <a href="https://linkedin.com/in/yourusername" class="btn btn-secondary">LinkedIn</a>
+                        </div>
+                    </div>
+                    <p class="footer-text animate-item">© 2026 TK. Crafted with curiosity.</p>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
